@@ -15,13 +15,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try {
         const foodCollection = client.db('foodCorner').collection('foods');
-        const reviewCollection = client.db('foodCorner').collection('review');
+        const reviewCollection = client.db('foodCorner').collection('reviewer');
 
         app.get('/foods', async(req, res)=>{
             const query = {}
             const cursor = foodCollection.find(query);
             const foods = await cursor.toArray();
-            // const foodsLimit = await cursor.limit(3).toArray();
             res.send(foods);
         })
 
@@ -40,9 +39,17 @@ async function run(){
         })
 
         // review api
-        app.post('/review', async(req,res)=>{
-            const review = req.body;
-            const result = await reviewCollection.insertOne(review);
+
+        app.get('/reviewer', async(req, res)=>{
+            const query = {}
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review);
+        })
+
+        app.post('/reviewer', async(req,res)=>{
+            const reviewer = req.body;
+            const result = await reviewCollection.insertOne(reviewer);
             res.send(result);
         })
     } 
