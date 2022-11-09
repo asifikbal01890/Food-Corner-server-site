@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,6 +15,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try {
         const foodCollection = client.db('foodCorner').collection('foods');
+
         app.get('/foods', async(req, res)=>{
             const query = {}
             const cursor = foodCollection.find(query);
@@ -22,12 +23,19 @@ async function run(){
             // const foodsLimit = await cursor.limit(3).toArray();
             res.send(foods);
         })
-        const foodCollectionLimit3 = client.db('foodCorner').collection('foods');
+
         app.get('/foodsLimit', async(req, res)=>{
             const query = {}
-            const cursor = foodCollectionLimit3.find(query);
+            const cursor = foodCollection.find(query);
             const foodsLimit = await cursor.limit(3).toArray();
             res.send(foodsLimit);
+        })
+
+        app.get('/foods/:id', async(req, res)=>{
+            id = req.params.id;
+            const query = { _id : ObjectId(id)}
+            const food = await foodCollection.findOne(query);
+            res.send(food);
         })
     } 
     finally {
