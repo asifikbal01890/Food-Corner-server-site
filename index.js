@@ -19,7 +19,15 @@ async function run(){
             const query = {}
             const cursor = foodCollection.find(query);
             const foods = await cursor.toArray();
+            // const foodsLimit = await cursor.limit(3).toArray();
             res.send(foods);
+        })
+        const foodCollectionLimit3 = client.db('foodCorner').collection('foods');
+        app.get('/foodsLimit', async(req, res)=>{
+            const query = {}
+            const cursor = foodCollectionLimit3.find(query);
+            const foodsLimit = await cursor.limit(3).toArray();
+            res.send(foodsLimit);
         })
     } 
     finally {
@@ -34,8 +42,6 @@ app.get('/', (req,res) =>{
     res.send('food corner server is running')
 })
 
-// pass : KbK95YnmzGaqCdDD
-// user: Asif
 
 app.listen(port, ()=>{
     console.log(`food corner server running on ${port}`);
