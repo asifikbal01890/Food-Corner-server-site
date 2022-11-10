@@ -37,11 +37,21 @@ async function run(){
             const food = await foodCollection.findOne(query);
             res.send(food);
         })
+        app.post('/foods', async(req,res)=>{
+            const foods = req.body;
+            const result = await foodCollection.insertOne(foods);
+            res.send(result);
+        })
 
         // review api
 
         app.get('/reviewer', async(req, res)=>{
-            const query = {}
+            let query = {}
+            if(req.query.email){
+                query = {
+                    email: req.query.email
+                }
+            }
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
             res.send(review);
@@ -50,6 +60,13 @@ async function run(){
         app.post('/reviewer', async(req,res)=>{
             const reviewer = req.body;
             const result = await reviewCollection.insertOne(reviewer);
+            res.send(result);
+        })
+
+        app.delete('/reviewer/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
     } 
