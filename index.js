@@ -19,7 +19,7 @@ async function run(){
 
         app.get('/foods', async(req, res)=>{
             const query = {}
-            const cursor = foodCollection.find(query);
+            const cursor = foodCollection.find(query).sort( { "price": 1 } );
             const foods = await cursor.toArray();
             res.send(foods);
         })
@@ -52,7 +52,7 @@ async function run(){
                     email: req.query.email
                 }
             }
-            const cursor = reviewCollection.find(query);
+            const cursor = reviewCollection.find(query).sort( { "userrating": 1 } );
             const review = await cursor.toArray();
             res.send(review);
         })
